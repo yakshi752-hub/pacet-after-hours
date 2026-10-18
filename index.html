@@ -1,0 +1,168 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PACET After Hours 🤎</title>
+<style>
+* { box-sizing: border-box; }body {
+margin: 0;
+font-family: Georgia, serif;
+background: #f6efe5;
+color: #493326;
+}
+
+header {
+background: #493326;
+color: #fff4e6;
+padding: 28px 16px;
+text-align: center;
+}
+
+header h1 {
+margin: 0;
+font-size: 32px;
+letter-spacing: 1px;
+}
+
+header p {
+margin-bottom: 0;
+font-style: italic;
+}
+
+main {
+max-width: 650px;
+margin: 30px auto;
+padding: 0 18px;
+}
+
+.card {
+background: #fffaf3;
+border: 1px solid #e4d4c1;
+border-radius: 16px;
+padding: 24px;
+margin-bottom: 22px;
+box-shadow: 0 5px 18px #4933260d;
+}
+
+h2 { margin-top: 0; }
+
+input, textarea, select, button {
+width: 100%;
+padding: 13px;
+margin: 9px 0 15px;
+border-radius: 9px;
+font: inherit;
+}
+
+input, textarea, select {
+border: 1px solid #d7c3ae;
+background: #fffdf9;
+color: #493326;
+}
+
+textarea {
+min-height: 125px;
+resize: vertical;
+}
+
+button {
+background: #654735;
+color: white;
+border: none;
+cursor: pointer;
+}
+
+button:hover { background: #493326; }
+
+.note {
+font-size: 13px;
+line-height: 1.6;
+color: #806b5b;
+}
+
+.tag {
+display: inline-block;
+background: #eee0cf;
+padding: 7px 11px;
+margin: 4px;
+border-radius: 20px;
+font-size: 13px;
+}
+
+footer {
+text-align: center;
+padding: 25px;
+font-size: 13px;
+color: #806b5b;
+}
+</style>
+
+</head>
+<body><header>
+  <h1>🌙 PACET After Hours</h1>
+  <p>Some stories are easier to tell anonymously.</p>
+  <p>P.A. College of Engineering and Technology · Pollachi</p>
+</header><main>
+  <section class="card">
+    <h2>Welcome to our little diary 🤎</h2>
+    <p>A place for secret crushes, friendships, compliments,
+    funny campus moments and unforgettable college memories.</p>
+    <span class="tag">❤️ Crushes</span>
+    <span class="tag">🫂 Friendship</span>
+    <span class="tag">🌷 Compliments</span>
+    <span class="tag">😂 Funny stories</span>
+    <span class="tag">👀 Campus stories</span>
+  </section>  <section class="card">
+    <h2>Write your confession ✍️</h2>
+    <p class="note">Share your story without putting your name in the confession.
+    Submissions must be reviewed before publication.</p><form id="confessionForm">
+  <label for="category">Choose a category</label>
+  <select id="category" required>
+    <option value="">Select one</option>
+    <option>Love & Crushes</option>
+    <option>Friendship</option>
+    <option>Compliments</option>
+    <option>Funny Stories</option>
+    <option>Campus Stories</option>
+  </select>
+
+  <label for="confession">Your confession</label>
+  <textarea id="confession" maxlength="1500"
+  placeholder="Dear diary..." required></textarea>
+
+  <label for="publication">Where should we publish it?</label>
+  <select id="publication" required>
+    <option value="">Choose an option</option>
+    <option>Website only</option>
+    <option>Instagram only</option>
+    <option>Both website and Instagram</option>
+  </select>
+
+  <label>
+    <input type="checkbox" id="consent" required
+    style="width:auto;margin-right:8px">
+    I confirm this submission respects other people's privacy
+    and agree to its review before publication.
+  </label>
+
+  <button type="submit">Submit confession 🤎</button>
+  <p class="note" id="message" aria-live="polite"></p>
+</form>
+
+  </section>  <section class="card">
+    <h2>Our little promise 🕊️</h2>
+    <p>Kindness first. No bullying, private information, threats
+    or harmful rumours. Every confession deserves a careful review
+    before it is shared.</p>
+  </section>
+</main><footer>
+  Made with 🤎 for the PACET community<br>
+  PACET After Hours · Every story has a place.
+</footer><script>
+document.getElementById("confessionForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+  document.getElementById("message").textContent =
+    "Thank you for sharing 🤎 This is a preview only; your confession has NOT been sent or saved. The submission system will be connected in a later step.";
+});
+</script></body>
+</html>
