@@ -1,67 +1,257 @@
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
-  // PACET After Hours — Supabase connection
-  const SUPABASE_URL = "PASTE_YOUR_PROJECT_URL_HERE";
-  const SUPABASE_PUBLISHABLE_KEY = "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PACET After Hours ☾</title>
+  <meta name="description" content="An independent student confession page for sharing campus stories, compliments, friendship and crushes.">
+  <style>
+    * { box-sizing: border-box; }
 
-  const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
-
-  const form = document.getElementById("confessionForm");
-  const message = document.getElementById("message");
-
-  form.addEventListener("submit", async function (event) {
-    event.preventDefault();
-
-    const category = document.getElementById("category").value;
-    const confession = document
-      .getElementById("confession").value.trim();
-    const publishTo = document.getElementById("publication").value;
-    const consent = document.getElementById("consent").checked;
-
-    if (!consent) {
-      message.textContent =
-        "Please confirm that your submission is appropriate.";
-      return;
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      background: #f6efe5;
+      color: #49372e;
+      line-height: 1.6;
     }
 
-    if (!confession) {
-      message.textContent = "Please write your confession first.";
-      return;
+    header {
+      text-align: center;
+      padding: 48px 20px 34px;
+      background: #5b4034;
+      color: #fff6e9;
     }
 
-    const submitButton = form.querySelector(
-      'button[type="submit"]'
-    );
+    header .moon { font-size: 32px; }
 
-    if (submitButton) submitButton.disabled = true;
-    message.textContent = "Submitting your confession...";
+    h1 {
+      margin: 8px 0;
+      font-size: clamp(30px, 7vw, 46px);
+      letter-spacing: 1px;
+    }
+
+    header p { margin: 6px 0; }
+
+    main {
+      width: min(92%, 650px);
+      margin: 32px auto;
+    }
+
+    .note {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .paper {
+      background: #fffaf2;
+      border: 1px solid #e3d2bd;
+      border-radius: 14px;
+      padding: clamp(20px, 5vw, 34px);
+      box-shadow: 0 8px 24px #4b332010;
+    }
+
+    label {
+      display: block;
+      margin: 18px 0 7px;
+      font-weight: bold;
+    }
+
+    select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cdb8a2;
+      border-radius: 8px;
+      background: #fffdf9;
+      color: #49372e;
+      font: inherit;
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-weight: normal;
+      font-size: 14px;
+    }
+
+    .consent input {
+      margin-top: 6px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 13px;
+      border: 0;
+      border-radius: 8px;
+      background: #765341;
+      color: white;
+      font: inherit;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    #message {
+      margin-top: 16px;
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      color: #765f50;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="moon">☾</div>
+    <h1>PACET After Hours</h1>
+    <p>Every campus has a story.</p>
+    <p>Some stories are meant to be shared anonymously.</p>
+  </header>
+
+  <main>
+    <div class="note">
+      <h2>Your little corner of campus 🤎</h2>
+      <p>Share a crush, a friendship moment, a compliment or a funny story.</p>
+    </div>
+
+    <section class="paper">
+      <h2>Write your confession</h2>
+      <p>Your submission will be reviewed before publication.</p>
+
+      <form id="confessionForm">
+        <label for="category">Choose a category</label>
+        <select id="category" required>
+          <option value="Love &amp; Crushes">Love &amp; Crushes</option>
+          <option value="Friendship">Friendship</option>
+          <option value="Compliments">Compliments</option>
+          <option value="Funny Stories">Funny Stories</option>
+          <option value="Campus Stories">Campus Stories</option>
+        </select>
+
+        <label for="confession">Your message</label>
+        <textarea id="confession" maxlength="1500"
+          placeholder="Write your story here..." required></textarea>
+
+        <label for="publication">Where would you like it shared?</label>
+        <select id="publication" required>
+          <option value="Website only">Website only</option>
+          <option value="Instagram only">Instagram only</option>
+          <option value="Both website and Instagram">
+            Both website and Instagram
+          </option>
+        </select>
+
+        <label class="consent">
+          <input type="checkbox" id="consent" required>
+          <span>I confirm this submission is respectful and does not
+          contain private information, threats or harmful content.</span>
+        </label>
+
+        <button id="submitButton" type="submit">Submit anonymously ☾</button>
+        <p id="message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    An independent student page — not an official college website.
+    <br>Share kindness. Respect privacy. ☾
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "PASTE_YOUR_PROJECT_URL_HERE";
+    const SUPABASE_PUBLISHABLE_KEY =
+      "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
+
+    const form = document.getElementById("confessionForm");
+    const message = document.getElementById("message");
+    const submitButton = document.getElementById("submitButton");
+
+    let supabaseClient = null;
 
     try {
-      const { error } = await supabaseClient
-        .from("confessions")
-        .insert({
-          category: category,
-          confession: confession,
-          publish_to: publishTo,
-          status: "pending"
-        });
-
-      if (error) throw error;
-
-      message.textContent =
-        "Thank you! Your confession has been submitted for review.";
-
-      form.reset();
+      if (
+        SUPABASE_URL.startsWith("https://") &&
+        !SUPABASE_URL.includes("PASTE_") &&
+        SUPABASE_PUBLISHABLE_KEY &&
+        !SUPABASE_PUBLISHABLE_KEY.includes("PASTE_") &&
+        window.supabase
+      ) {
+        supabaseClient = window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_PUBLISHABLE_KEY
+        );
+      }
     } catch (error) {
-      console.error("Submission error:", error);
-      message.textContent =
-        "Sorry, submission failed. Please try again later.";
-    } finally {
-      if (submitButton) submitButton.disabled = false;
+      console.error("Supabase setup error:", error);
     }
-  });
-</script>
+
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      if (!supabaseClient) {
+        message.textContent =
+          "The form is not connected yet. Please check the Supabase settings.";
+        return;
+      }
+
+      const category = document.getElementById("category").value;
+      const confession = document.getElementById("confession").value.trim();
+      const publishTo = document.getElementById("publication").value;
+
+      if (!confession || confession.length > 1500) {
+        message.textContent = "Please enter a message of 1–1500 characters.";
+        return;
+      }
+
+      if (!document.getElementById("consent").checked) {
+        message.textContent = "Please tick the confirmation checkbox.";
+        return;
+      }
+
+      submitButton.disabled = true;
+      message.textContent = "Submitting...";
+
+      try {
+        const { error } = await supabaseClient
+          .from("confessions")
+          .insert({
+            category: category,
+            confession: confession,
+            publish_to: publishTo,
+            status: "pending"
+          });
+
+        if (error) throw error;
+
+        message.textContent =
+          "Thank you! Your confession has been submitted for review.";
+        form.reset();
+      } catch (error) {
+        console.error("Submission error:", error);
+        message.textContent =
+          "Submission failed. Please try again later.";
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
