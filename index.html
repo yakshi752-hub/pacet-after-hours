@@ -1,100 +1,143 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PACET After Hours ☾</title>
-  <meta name="description" content="An independent student confession page for sharing campus stories, compliments, friendship and crushes.">
+  <meta name="theme-color" content="#f8f1e7">
+  <title>PACET After Hours</title>
+  <meta name="description" content="A little corner for anonymous PACET confessions, stories and campus memories.">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
-    * { box-sizing: border-box; }
+    :root {
+      --cream: #f8f1e7;
+      --paper: #fffaf2;
+      --brown: #553b2d;
+      --muted: #8b7565;
+      --line: #e8d9c8;
+      --accent: #9b7054;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
+      background: var(--cream);
+      color: var(--brown);
       font-family: Georgia, "Times New Roman", serif;
-      background: #f6efe5;
-      color: #49372e;
       line-height: 1.6;
     }
 
     header {
       text-align: center;
-      padding: 48px 20px 34px;
-      background: #5b4034;
-      color: #fff6e9;
+      padding: 42px 18px 30px;
+      border-bottom: 1px solid var(--line);
+      background: var(--paper);
     }
 
-    header .moon { font-size: 32px; }
+    .eyebrow {
+      font-family: Arial, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-size: 11px;
+      color: var(--muted);
+    }
 
     h1 {
+      font-size: clamp(32px, 7vw, 54px);
       margin: 8px 0;
-      font-size: clamp(30px, 7vw, 46px);
-      letter-spacing: 1px;
+      line-height: 1.15;
     }
 
-    header p { margin: 6px 0; }
+    header p {
+      margin: 8px auto 0;
+      max-width: 520px;
+      color: var(--muted);
+    }
 
     main {
-      width: min(92%, 650px);
-      margin: 32px auto;
+      width: min(760px, 92%);
+      margin: 32px auto 50px;
     }
 
-    .note {
-      text-align: center;
-      margin-bottom: 24px;
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: clamp(20px, 5vw, 32px);
+      margin-bottom: 26px;
+      box-shadow: 0 5px 20px rgba(85, 59, 45, 0.04);
     }
 
-    .paper {
-      background: #fffaf2;
-      border: 1px solid #e3d2bd;
-      border-radius: 14px;
-      padding: clamp(20px, 5vw, 34px);
-      box-shadow: 0 8px 24px #4b332010;
+    h2 {
+      margin: 0 0 8px;
+      font-size: 25px;
+    }
+
+    .intro {
+      color: var(--muted);
+      margin-top: 0;
     }
 
     label {
       display: block;
-      margin: 18px 0 7px;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
       font-weight: bold;
+      margin: 18px 0 7px;
     }
 
-    select, textarea {
+    input, select, textarea {
       width: 100%;
-      padding: 12px;
-      border: 1px solid #cdb8a2;
-      border-radius: 8px;
+      border: 1px solid var(--line);
       background: #fffdf9;
-      color: #49372e;
-      font: inherit;
+      border-radius: 9px;
+      padding: 12px;
+      font: 15px Arial, sans-serif;
+      color: var(--brown);
     }
 
     textarea {
-      min-height: 150px;
+      min-height: 145px;
       resize: vertical;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid #c8a58b;
+      outline-offset: 1px;
     }
 
     .consent {
       display: flex;
       align-items: flex-start;
-      gap: 10px;
+      gap: 9px;
       font-weight: normal;
-      font-size: 14px;
+      line-height: 1.5;
     }
 
     .consent input {
-      margin-top: 6px;
+      width: auto;
+      margin-top: 5px;
     }
 
     button {
       width: 100%;
-      margin-top: 20px;
-      padding: 13px;
-      border: 0;
-      border-radius: 8px;
-      background: #765341;
+      border: none;
+      border-radius: 9px;
+      background: var(--brown);
       color: white;
-      font: inherit;
-      font-weight: bold;
+      padding: 14px;
+      margin-top: 18px;
+      font-size: 15px;
       cursor: pointer;
+    }
+
+    button:hover {
+      background: var(--accent);
     }
 
     button:disabled {
@@ -103,52 +146,98 @@
     }
 
     #message {
-      margin-top: 16px;
+      margin: 14px 0 0;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
       overflow-wrap: anywhere;
+    }
+
+    .confession {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .confession:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .category {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .confession-text {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      margin: 8px 0;
+    }
+
+    .date {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .empty {
+      color: var(--muted);
+      font-style: italic;
     }
 
     footer {
       text-align: center;
-      padding: 20px;
-      font-size: 13px;
-      color: #765f50;
+      color: var(--muted);
+      font: 12px Arial, sans-serif;
+      padding: 24px 18px 35px;
+    }
+
+    footer a {
+      color: var(--brown);
     }
   </style>
 </head>
+
 <body>
   <header>
-    <div class="moon">☾</div>
-    <h1>PACET After Hours</h1>
-    <p>Every campus has a story.</p>
-    <p>Some stories are meant to be shared anonymously.</p>
+    <div class="eyebrow">A little corner of PACET</div>
+    <h1>PACET After Hours ☾</h1>
+    <p>Unspoken thoughts, little secrets and memories worth sharing.</p>
   </header>
 
   <main>
-    <div class="note">
-      <h2>Your little corner of campus 🤎</h2>
-      <p>Share a crush, a friendship moment, a compliment or a funny story.</p>
-    </div>
-
-    <section class="paper">
-      <h2>Write your confession</h2>
-      <p>Your submission will be reviewed before publication.</p>
+    <section class="card">
+      <h2>Leave a little secret ✉️</h2>
+      <p class="intro">
+        Share anonymously. Please be respectful and don't include private
+        information about yourself or other people.
+      </p>
 
       <form id="confessionForm">
         <label for="category">Choose a category</label>
         <select id="category" required>
-          <option value="Love &amp; Crushes">Love &amp; Crushes</option>
+          <option value="">Select a category</option>
+          <option value="Love & Crushes">Love & Crushes</option>
           <option value="Friendship">Friendship</option>
           <option value="Compliments">Compliments</option>
           <option value="Funny Stories">Funny Stories</option>
           <option value="Campus Stories">Campus Stories</option>
         </select>
 
-        <label for="confession">Your message</label>
-        <textarea id="confession" maxlength="1500"
-          placeholder="Write your story here..." required></textarea>
+        <label for="confession">Your confession</label>
+        <textarea
+          id="confession"
+          maxlength="1500"
+          placeholder="Write what's on your mind..."
+          required
+        ></textarea>
 
         <label for="publication">Where would you like it shared?</label>
         <select id="publication" required>
+          <option value="">Choose a preference</option>
           <option value="Website only">Website only</option>
           <option value="Instagram only">Instagram only</option>
           <option value="Both website and Instagram">
@@ -158,24 +247,33 @@
 
         <label class="consent">
           <input type="checkbox" id="consent" required>
-          <span>I confirm this submission is respectful and does not
-          contain private information, threats or harmful content.</span>
+          <span>
+            I confirm this submission is respectful and contains no private
+            information. I understand it will be reviewed before publication.
+          </span>
         </label>
 
-        <button id="submitButton" type="submit">Submit anonymously ☾</button>
+        <button type="submit" id="submitButton">Send anonymously 🤎</button>
         <p id="message" role="status" aria-live="polite"></p>
       </form>
+    </section>
+
+    <section class="card" id="publicConfessions">
+      <h2>Whispers from campus ☕</h2>
+      <p class="intro">Little stories shared by the PACET community.</p>
+      <div id="confessionList" aria-live="polite">
+        <p class="empty">Loading confessions...</p>
+      </div>
     </section>
   </main>
 
   <footer>
-    An independent student page — not an official college website.
-    <br>Share kindness. Respect privacy. ☾
+    PACET After Hours is an independent student page, not an official
+    college website. Submissions are reviewed before publication.
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    
+    // Your Supabase project details
     const SUPABASE_URL = "https://fcwefluemagvbvdbajxg.supabase.co";
     const SUPABASE_PUBLISHABLE_KEY =
       "sb_publishable_9S-l4JtZi6ZKF7iUGwAw7g_8jHq4CtR";
@@ -183,51 +281,121 @@
     const form = document.getElementById("confessionForm");
     const message = document.getElementById("message");
     const submitButton = document.getElementById("submitButton");
+    const confessionList = document.getElementById("confessionList");
 
     let supabaseClient = null;
 
-    try {
-      if (
-        SUPABASE_URL.startsWith("https://") &&
-        !SUPABASE_URL.includes("PASTE_") &&
-        SUPABASE_PUBLISHABLE_KEY &&
-        !SUPABASE_PUBLISHABLE_KEY.includes("PASTE_") &&
-        window.supabase
-      ) {
-        supabaseClient = window.supabase.createClient(
-          SUPABASE_URL,
-          SUPABASE_PUBLISHABLE_KEY
-        );
-      }
-    } catch (error) {
-      console.error("Supabase setup error:", error);
+    if (
+      window.supabase &&
+      SUPABASE_URL.startsWith("https://") &&
+      !SUPABASE_URL.includes("PASTE_") &&
+      !SUPABASE_PUBLISHABLE_KEY.includes("PASTE_")
+    ) {
+      supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+      );
     }
 
-    form.addEventListener("submit", async function(event) {
+    function showMessage(text, success = false) {
+      message.textContent = text;
+      message.style.color = success ? "#376b43" : "#9b3838";
+    }
+
+    function formatDate(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "";
+      return date.toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      });
+    }
+
+    function displayConfessions(rows) {
+      confessionList.replaceChildren();
+
+      if (!rows || rows.length === 0) {
+        const empty = document.createElement("p");
+        empty.className = "empty";
+        empty.textContent =
+          "No approved confessions yet. Maybe yours will be the first!";
+        confessionList.appendChild(empty);
+        return;
+      }
+
+      rows.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "confession";
+
+        const category = document.createElement("div");
+        category.className = "category";
+        category.textContent = item.category;
+
+        const content = document.createElement("p");
+        content.className = "confession-text";
+        content.textContent = item.confession;
+
+        const date = document.createElement("div");
+        date.className = "date";
+        date.textContent = formatDate(item.created_at);
+
+        article.append(category, content, date);
+        confessionList.appendChild(article);
+      });
+    }
+
+    async function loadApprovedConfessions() {
+      if (!supabaseClient) {
+        confessionList.textContent =
+          "Confessions are temporarily unavailable. Please try again later.";
+        return;
+      }
+
+      try {
+        // Supabase RLS must allow visitors to read only approved,
+        // website-eligible confessions.
+        const { data, error } = await supabaseClient
+          .from("confessions")
+          .select("category, confession, created_at")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        displayConfessions(data);
+      } catch (error) {
+        console.error("Could not load confessions:", error);
+        confessionList.textContent =
+          "We couldn't load confessions right now. Please try again later.";
+      }
+    }
+
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
       if (!supabaseClient) {
-        message.textContent =
-          "The form is not connected yet. Please check the Supabase settings.";
+        showMessage("Connection unavailable. Please try again later.");
         return;
       }
 
       const category = document.getElementById("category").value;
       const confession = document.getElementById("confession").value.trim();
       const publishTo = document.getElementById("publication").value;
+      const consent = document.getElementById("consent").checked;
 
-      if (!confession || confession.length > 1500) {
-        message.textContent = "Please enter a message of 1–1500 characters.";
+      if (!category || !confession || !publishTo || !consent) {
+        showMessage("Please complete all fields and confirm the checkbox.");
         return;
       }
 
-      if (!document.getElementById("consent").checked) {
-        message.textContent = "Please tick the confirmation checkbox.";
+      if (confession.length > 1500) {
+        showMessage("Your confession must be 1500 characters or fewer.");
         return;
       }
 
       submitButton.disabled = true;
-      message.textContent = "Submitting...";
+      submitButton.textContent = "Sending...";
+      showMessage("");
 
       try {
         const { error } = await supabaseClient
@@ -241,17 +409,23 @@
 
         if (error) throw error;
 
-        message.textContent =
-          "Thank you! Your confession has been submitted for review.";
         form.reset();
+        showMessage(
+          "Your confession has been submitted! It will be reviewed before publication. 🤎",
+          true
+        );
       } catch (error) {
-        console.error("Submission error:", error);
-        message.textContent =
-          "Submission failed. Please try again later.";
+        console.error("Submission failed:", error);
+        showMessage(
+          "Submission failed: " + (error.message || "Please try again.")
+        );
       } finally {
         submitButton.disabled = false;
+        submitButton.textContent = "Send anonymously 🤎";
       }
     });
+
+    loadApprovedConfessions();
   </script>
 </body>
 </html>
